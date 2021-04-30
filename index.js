@@ -1,6 +1,7 @@
 // TODO: Include packages needed for this application
 const inquirer = require("inquirer");
 const fs = require("fs");
+const path = require("path");
 
 // TODO: Create an array of questions for user input
 const questions = [
@@ -60,10 +61,16 @@ const questions = [
 // TODO: Create a function to write README file
 
 function writeToFile(template,fileName) {
-  fs.writeFile(fileName, template, function(err) {
-    if (err) throw err;
-    console.log(`Your new file "${fileName}" has been created/updated successfully!`);
-  });
+  let fileNameProcessed = fileName.replace(/\s/g, '');
+  if(path.extname(fileNameProcessed) !== ".md") {
+    console.log("The file extension you entered is not valid. Only .md files are accepted (Ex: README.md). For your convenience, the questions will be presented again in 2 seconds.");
+    setTimeout(()=>{init()},2000);
+  } else {
+    fs.writeFile(fileNameProcessed, template, function(err) {
+      if (err) throw err;
+      console.log(`Your new file "${fileNameProcessed}" has been created/updated successfully!`);
+    });
+  }
 }
 
 // TODO: Create a function to initialize app
@@ -105,30 +112,7 @@ function init() {
           break;
       }
 
-      let template =`# ${answers.appName}\n
-        ${licenseBadge}\n
-      ## ${answers.appDescription}\n
-      ## Table of content\n
-      - [Installation] (#installation)\n
-      - [Usage] (#usage)\n
-      - [Contributions-Guidelines] (#contributions-guidelines)\n
-      - [Tests] (#tests)\n
-      - [License] (#license)\n
-      - [Questions] (#questions)\n
-      ## Installation\n
-      ${answers.appInstallation}\n
-      ## Usage\n
-      ${answers.appUsage}\n
-      ## Contributions-Guidelines\n
-      ${answers.appContributions}\n
-      ## Tests\n
-      ${answers.appTest}\n
-      ## License\n
-      This application is covered under the ${answers.appLicense} license.\n
-      ## Questions\n
-      - For more information please visit https://github.com/${answers.appGitHubUserName}\n
-      - In case of questions, feel free to contact me at ${answers.appUserEmail}\n
-      `;
+      let template =`# ${answers.appName}\n${licenseBadge}\n## ${answers.appDescription}\n## Table of content\n1. [Installation](#installation)\n2. [Usage](#usage)\n3. [Contributions-Guidelines](#contributions-guidelines)\n4. [Tests](#tests)\n5. [License](#license)\n6. [Questions](#questions)\n<a name="installation"></a>\n## 1. Installation\n${answers.appInstallation}\n<a name="usage"></a>\n## 2. Usage\n${answers.appUsage}\n<a name="contributions-guidelines"></a>\n## 3. Contributions-Guidelines\n${answers.appContributions}\n<a name="tests"></a>\n## 4. Tests\n${answers.appTest}\n<a name="license"></a>\n## 5. License\nThis application is covered under the ${answers.appLicense} license.\n<a name="questions"></a>\n## 6. Questions\n- For more information please visit https://github.com/${answers.appGitHubUserName}\n- In case of questions, feel free to contact me at ${answers.appUserEmail}\n`;
       writeToFile(template,fileName);
     }
   });
