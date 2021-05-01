@@ -55,7 +55,7 @@ const questions = [
     type: 'input',
     name: 'appUserEmail',
     message: "What is your email?"
-  },
+  }
 ];
 
 // TODO: Create a function to write README file
@@ -77,7 +77,6 @@ function writeToFile(template,fileName) {
 
 function init() {
   let newAnswer = inquirer.prompt(questions).then((answers) => {
-
     if(answers.fileName===""||answers.appContributions===""||answers.appDescription===""||answers.appInstallation===""||answers.appName===""||answers.appTest===""||answers.appUsage==="") {
       console.log("One or more pieces of information are missing; please provide an answer to all the questions to create your new README.md file. For your convenience, the questions will be presented again in 2 seconds.");
       setTimeout(()=>{init()},2000);
